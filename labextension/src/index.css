@@ -4,7 +4,8 @@
 */
 
 .jp-OutputWidgetGeoJSON, .jp-DocWidgetGeoJSON {
-  
+  width: 100%;
+  padding: 5px 0;
 }
 
 .jp-OutputWidgetGeoJSON {
