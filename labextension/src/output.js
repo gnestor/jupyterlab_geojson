@@ -1,7 +1,7 @@
 import { Widget } from '@phosphor/widgets';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GeoJSONComponent from 'jupyterlab_geojson_react';
+import GeoJSON from 'jupyterlab_geojson_react';
 
 const MIME_TYPE = 'application/geo+json';
 const CLASS_NAME = 'jp-OutputWidgetGeoJSON';

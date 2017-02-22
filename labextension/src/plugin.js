@@ -31,10 +31,12 @@ function activatePlugin(app, rendermime, registry) {
     },
     index
   );
-
-  if ('geojson') {
-    const EXTENSIONS = ['.geojson'];
-    const DEFAULT_EXTENSIONS = ['.geojson'];
+  
+  /**
+   * Set the extensions associated with GeoJSON.
+   */
+  const EXTENSIONS = ['.geojson', '.json'];
+  const DEFAULT_EXTENSIONS = ['.geojson'];
 
     /**
      * Add document renderer for geojson files
@@ -48,9 +50,8 @@ function activatePlugin(app, rendermime, registry) {
       preferKernel: false,
       canStartKernel: false
     };
-
-    registry.addWidgetFactory(new DocWidgetFactory(options));
-  }
+    
+  registry.addWidgetFactory(new DocWidgetFactory(options));
 }
 
 /**
@@ -58,9 +59,7 @@ function activatePlugin(app, rendermime, registry) {
  */
 const Plugin = {
   id: 'jupyter.extensions.GeoJSON',
-  requires: 'geojson'
-    ? [IRenderMime, IDocumentRegistry]
-    : [IRenderMime],
+  requires: [IRenderMime, IDocumentRegistry],
   activate: activatePlugin,
   autoStart: true
 };

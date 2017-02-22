@@ -4,7 +4,7 @@ import { ActivityMonitor } from '@jupyterlab/coreutils';
 import { runMode } from '@jupyterlab/codemirror';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GeoJSONComponent from 'jupyterlab_geojson_react';
+import GeoJSON from 'jupyterlab_geojson_react';
 
 const CLASS_NAME = 'jp-DocWidgetGeoJSON';
 const RENDER_TIMEOUT = 1000;
@@ -55,6 +55,7 @@ class ErrorDisplay extends React.Component {
  * A widget for rendering jupyterlab_geojson files
  */
 export class DocWidget extends Widget {
+
   constructor(context) {
     super();
     this._context = context;
