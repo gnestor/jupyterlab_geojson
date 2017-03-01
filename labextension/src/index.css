@@ -5,14 +5,13 @@
 
 .jp-OutputWidgetGeoJSON, .jp-DocWidgetGeoJSON {
   width: 100%;
-  padding: 5px 0;
+  padding: 0;
 }
 
 .jp-OutputWidgetGeoJSON {
-  padding-top: 5px;
+  height: 360px;
 }
 
 .jp-DocWidgetGeoJSON {
-  padding: 0;
-  overflow: auto;
+  overflow: hidden;
 }
