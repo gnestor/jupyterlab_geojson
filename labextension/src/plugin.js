@@ -1,5 +1,5 @@
-import { IRenderMime } from 'jupyterlab/lib/rendermime';
-import { IDocumentRegistry } from 'jupyterlab/lib/docregistry';
+import { IRenderMime } from '@jupyterlab/rendermime';
+import { IDocumentRegistry } from '@jupyterlab/docregistry';
 import { toArray, ArrayExt } from '@phosphor/algorithm';
 import { OutputRenderer } from './output';
 import { DocWidgetFactory } from './doc';
@@ -10,18 +10,19 @@ import './index.css';
  */
 function activatePlugin(app, rendermime, registry) {
   /**
-   * Calculate the index of the renderer in the array renderers (e.g. Insert 
-   * this renderer after any renderers with mime type that matches "+json") 
-   * or simply pass an integer such as 0.
+   * Calculate the index of the renderer in the array renderers
+   * e.g. Insert this renderer after any renderers with mime type that matches 
+   * "+json"
    */
   // const index = ArrayExt.findLastIndex(
   //   toArray(rendermime.mimeTypes()),
   //   mime => mime.endsWith('+json')
   // ) + 1;
+  /* ...or just insert it at the top */
   const index = 0;
 
   /**
-   * Add the renderer to the registry of renderers.
+   * Add mime type renderer for application/geo+json
    */
   rendermime.addRenderer(
     {
@@ -32,14 +33,11 @@ function activatePlugin(app, rendermime, registry) {
   );
 
   if ('geojson') {
-    /**
-     * Set the extensions associated with GeoJSON.
-     */
-    const EXTENSIONS = [ '.geojson' ];
-    const DEFAULT_EXTENSIONS = [ '.geojson' ];
+    const EXTENSIONS = ['.geojson'];
+    const DEFAULT_EXTENSIONS = ['.geojson'];
 
     /**
-     * Add file handler for geojson files.
+     * Add document renderer for geojson files
      */
     const options = {
       fileExtensions: EXTENSIONS,
@@ -55,11 +53,14 @@ function activatePlugin(app, rendermime, registry) {
   }
 }
 
+/**
+ * Configure jupyterlab plugin
+ */
 const Plugin = {
   id: 'jupyter.extensions.GeoJSON',
   requires: 'geojson'
-    ? [ IRenderMime, IDocumentRegistry ]
-    : [ IRenderMime ],
+    ? [IRenderMime, IDocumentRegistry]
+    : [IRenderMime],
   activate: activatePlugin,
   autoStart: true
 };

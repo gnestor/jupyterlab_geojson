@@ -4,14 +4,14 @@
 */
 
 .jp-OutputWidgetGeoJSON, .jp-DocWidgetGeoJSON {
-  padding: 5px 0;
-}
-
-.jp-OutputWidgetGeoJSON {
   
 }
 
+.jp-OutputWidgetGeoJSON {
+  padding-top: 5px;
+}
+
 .jp-DocWidgetGeoJSON {
-  padding: 5px;
+  padding: 0;
   overflow: auto;
 }

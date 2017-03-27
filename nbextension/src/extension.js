@@ -22,10 +22,7 @@ if (window.require) {
  */
 export function load_ipython_extension() {
   define(
-    [
-      'nbextensions/jupyterlab_geojson/index',
-      'base/js/namespace'
-    ],
+    ['nbextensions/jupyterlab_geojson/index', 'base/js/namespace'],
     (Extension, Jupyter) => {
       const { notebook } = Jupyter;
       Extension.register_renderer(notebook);
