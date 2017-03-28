@@ -52,7 +52,7 @@ export class OutputWidget extends Widget {
    */
   onResize(msg) {
     /* Re-render on resize */
-    this.update();
+    this._render();
   }
 
   /**

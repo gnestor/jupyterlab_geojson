@@ -9,7 +9,6 @@ import GeoJSON from 'jupyterlab_geojson_react';
 const CLASS_NAME = 'jp-DocWidgetGeoJSON';
 const RENDER_TIMEOUT = 1000;
 
-
 class ErrorDisplay extends React.Component {
   componentDidUpdate() {
     runMode(this.props.content, { name: 'javascript', json: true }, this.ref);
@@ -44,56 +43,68 @@ class ErrorDisplay extends React.Component {
             padding: 10,
             overflow: 'hidden'
           }}
-        ></pre>
+        />
       </div>
     );
   }
 }
 
-
 /**
  * A widget for rendering jupyterlab_geojson files
  */
 export class DocWidget extends Widget {
-
   constructor(context) {
     super();
     this._context = context;
-    /* Re-render when the document content changes */
-    context.model.contentChanged.connect(() => {
+    this._onPathChanged();
+    this.addClass(CLASS_NAME);
+    context.ready.then(() => {
       this.update();
+      /* Re-render when the document content changes */
+      context.model.contentChanged.connect(this.update, this);
+      /* Re-render when the document path changes */
+      context.fileChanged.connect(this.update, this);
     });
-    /* Re-render when the document path changes */
-    context.pathChanged.connect(() => {
-      this.update();
-    });
+    /* Update title when path changes */
+    context.pathChanged.connect(this._onPathChanged, this);
     /* Throttle re-renders until changes have stopped */
     this._monitor = new ActivityMonitor({
       signal: context.model.contentChanged,
       timeout: RENDER_TIMEOUT
     });
     this._monitor.activityStopped.connect(this.update, this);
-    this.addClass(CLASS_NAME);
+  }
+  
+  /**
+   * The widget's context
+   */
+  get context() {
+    return this._context;
   }
 
   /**
    * Dispose of the resources used by the widget
    */
   dispose() {
-    if (!this.isDisposed) {
-      this._context = null;
-      ReactDOM.unmountComponentAtNode(this.node);
-      this._monitor.dispose();
-      super.dispose();
-    }
+    this._context = null;
+    this._monitor.dispose();
+    super.dispose();
   }
 
+  // /**
+  //  * A message handler invoked on an `'after-attach'` message
+  //  */
+  // onAfterAttach(msg) {
+  //   /* Render initial data */
+  //   this.update();
+  // }
+  
   /**
-   * A message handler invoked on an `'after-attach'` message
+   * A message handler invoked on an `'before-detach'` message
    */
-  onAfterAttach(msg) {
-    /* Render initial data */
-    this.update();
+  onBeforeDetach(msg) {
+    /* Dispose of resources used by this widget */
+    ReactDOM.unmountComponentAtNode(this.node);
   }
 
   /**
@@ -108,29 +119,28 @@ export class DocWidget extends Widget {
    * A message handler invoked on an `'update-request'` message
    */
   onUpdateRequest(msg) {
-    this.title.label = this._context.path.split('/').pop();
-    if (this.isAttached) {
-      const content = this._context.model.toString();
-      try {
-        const props = {
-          data: JSON.parse(content),
-          width: this.node.offsetWidth,
-          height: this.node.offsetHeight
-        };
-        ReactDOM.render(
-          <GeoJSONComponent {...props} />,
-          this.node
-        );
-      } catch (error) {
-        ReactDOM.render(
-          <ErrorDisplay
-            message="Invalid JSON"
-            content={content}
-          />,
-          this.node
-        );
-      }
+    if (this.isAttached && this._context.isReady) this._render();
+  }
+  
+  _render() {
+    const content = this._context.model.toString();
+    try {
+      const props = {
+        data: JSON.parse(content),
+        width: this.node.offsetWidth,
+        height: this.node.offsetHeight
+      };
+      ReactDOM.render(<GeoJSON {...props} />, this.node);
+    } catch (error) {
+      ReactDOM.render(
+        <ErrorDisplay message="Invalid JSON" content={content} />,
+        this.node
+      );
     }
+  }
+  
+  _onPathChanged() {
+    this.title.label = this._context.path.split('/').pop();
   }
 }
 
@@ -138,16 +148,17 @@ export class DocWidget extends Widget {
  * A widget factory for DocWidget
  */
 export class DocWidgetFactory extends ABCWidgetFactory {
-  constructor(options) {
-    super(options);
-  }
+  // constructor(options) {
+  //   super(options);
+  // }
 
   /**
    * Create a new widget instance
    */
-  createNewWidget(context, kernel) {
-    const widget = new DocWidget(context);
-    this.widgetCreated.emit(widget);
-    return widget;
+  createNewWidget(context) {
+    // const widget = new DocWidget(context);
+    // this.widgetCreated.emit(widget);
+    // return widget;
+    return new DocWidget(context);
   }
 }
