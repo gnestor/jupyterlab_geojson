@@ -20,13 +20,13 @@ function handleClearOutput(event, { cell: { output_area } }) {
   /* Get rendered DOM node */
   const toinsert = output_area.element.find(CLASS_NAME.split(' ')[0]);
   /* e.g. Dispose of resources used by renderer library */
-  // if (toinsert) renderLibrary.dispose(toinsert[0]);
+  if (toinsert) ReactDOM.unmountComponentAtNode(toinsert[0]);
 }
 
 /**
  * Handle when a new output is added
  */
-function handleAddOutput(event,  { output, output_area }) {
+function handleAddOutput(event, { output, output_area }) {
   /* Get rendered DOM node */
   const toinsert = output_area.element.find(CLASS_NAME.split(' ')[0]);
   /** e.g. Inject a static image representation into the mime bundle for
@@ -42,6 +42,11 @@ function handleAddOutput(event,  { output, output_area }) {
   //       });
   //   });
   // }
+  /** Hack: Leaflet maps don't display all tiles unless the window is 
+   *  resized or `map.invalidateSize()` is called.
+   *  https://github.com/Leaflet/Leaflet/issues/694
+   */
+  output_area.ref.map.invalidateSize();
 }
 
 /**
@@ -70,13 +75,8 @@ export function register_renderer(notebook) {
       width: element.width(),
       height: element.height()
     };
-    render(props, toinsert[0]);
+    this.ref = render(props, toinsert[0]);
     element.append(toinsert);
-    // Unmount component on this.clear_output
-    const that = this;
-    this.element.on('changed', () => {
-      if (that.outputs.length > 0) ReactDOM.unmountComponentAtNode(toinsert[0]);
-    });
     return toinsert;
   };
 
