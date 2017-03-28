@@ -65,10 +65,7 @@ export class OutputWidget extends Widget {
       width: this.node.offsetWidth,
       height: this.node.offsetHeight
     };
-    ReactDOM.render(
-      <GeoJSONComponent {...props} />,
-      this.node
-    );
+    ReactDOM.render(<GeoJSON {...props} />, this.node);
   }
 }
 

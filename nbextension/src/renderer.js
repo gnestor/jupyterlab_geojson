@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GeoJSONComponent from 'jupyterlab_geojson_react';
+import GeoJSON from 'jupyterlab_geojson_react';
 import './index.css';
 
 const MIME_TYPE = 'application/geo+json';
@@ -10,11 +10,7 @@ const CLASS_NAME = 'output_GeoJSON rendered_html';
  * Render data to the DOM node
  */
 function render(props, node) {
-  ReactDOM.render(<GeoJSONComponent {...props} />, node);
-  // Hack: Leaflet maps don't display all tiles unless the window is
-  // resized or `map.invalidateSize()` is called.
-  // https://github.com/Leaflet/Leaflet/issues/694
-  setTimeout(() => ref.map.invalidateSize(), 1000);
+  return ReactDOM.render(<GeoJSON {...props} />, node);
 }
 
 /**
